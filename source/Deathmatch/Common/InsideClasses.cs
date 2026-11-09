@@ -26,6 +26,7 @@ namespace Deathmatch
     public class InsideBatch
     {
         [JsonPropertyName("batch_id")] public string BatchId { get; set; } = Guid.NewGuid().ToString();
+        [JsonPropertyName("game")] public string Game { get; set; } = "deathmatch";
         [JsonPropertyName("map")] public string Map { get; set; } = "";
         [JsonPropertyName("mode")] public string Mode { get; set; } = "";
         [JsonPropertyName("players")] public List<InsideStatBuffer> Players { get; set; } = new();

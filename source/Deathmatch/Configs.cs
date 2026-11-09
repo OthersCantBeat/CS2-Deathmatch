@@ -419,5 +419,10 @@ public class InsideRanks
     [JsonPropertyName("Top Commands")] public string TopCommands { get; set; } = "css_top,css_dmtop";
     // Batches kept while Inside can't be reached; older ones are dropped.
     [JsonPropertyName("Max Pending Batches")] public int MaxPendingBatches { get; set; } = 50;
+    // Recurring chat message telling players where to see their stats (works without Enabled too).
+    [JsonPropertyName("Advert Enabled")] public bool AdvertEnabled { get; set; } = true;
+    [JsonPropertyName("Advert Interval Seconds")] public int AdvertIntervalSeconds { get; set; } = 300;
+    [JsonPropertyName("Advert Stats Url")] public string AdvertStatsUrl { get; set; } = "inside.ocb.gg";
+    [JsonPropertyName("Advert Apply Url")] public string AdvertApplyUrl { get; set; } = "ocb.gg";
 }
 

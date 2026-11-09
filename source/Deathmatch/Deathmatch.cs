@@ -25,7 +25,7 @@ public partial class Deathmatch : BasePlugin, IPluginConfig<DeathmatchConfig>
 {
     public override string ModuleName => "Deathmatch";
     public override string ModuleAuthor => "Nocky & Miksen(Forked)";
-    public override string ModuleVersion => "1.4.0";
+    public override string ModuleVersion => "1.5.0";
 
     public void OnConfigParsed(DeathmatchConfig config)
     {

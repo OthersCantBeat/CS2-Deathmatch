@@ -79,7 +79,8 @@
   "Chat.Inside.Milestone": "Achievement unlocked: {gold}{0}{default}",
   "Chat.Inside.Rank": "Your rank: {gold}{0}{default} with {green}{1}{default} XP (place {blue}{2}{default})",
   "Chat.Inside.NextRank": "Next rank {gold}{0}{default} in {green}{1}{default} XP",
-  "Chat.Inside.TopHeader": "Top 10 on the OCB deathmatch servers:",
+  "Chat.Inside.TopHeader": "Top 10 on the OCB CS2 servers:",
   "Chat.Inside.TopLine": " {blue}{0}.{default} {green}{1}{default} {gold}{2}{default} ({3} XP)",
-  "Chat.Inside.Offline": "Ranks are not available right now, your stats are still counted."
+  "Chat.Inside.Offline": "Ranks are not available right now, your stats are still counted.",
+  "Chat.Inside.Advert": "Your rank, stats and achievements: {green}{0}{default} (members) · {green}!rank{default} · {green}!top{default} · Not a member yet? Apply at {green}{1}{default}"
 }

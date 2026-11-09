@@ -35,8 +35,13 @@ namespace Deathmatch
 
         private string InsidePendingFile => Path.Combine(ModuleDirectory, "inside-pending.json");
 
+        private string InsideAdvertText() =>
+            Localizer["Chat.Prefix"] + " " + Localizer["Chat.Inside.Advert", Config.InsideRanks.AdvertStatsUrl, Config.InsideRanks.AdvertApplyUrl];
+
         public void InsideLoad()
         {
+            if (Config.InsideRanks.AdvertEnabled && Config.InsideRanks.AdvertIntervalSeconds > 0)
+                AddTimer(Math.Max(60, Config.InsideRanks.AdvertIntervalSeconds), () => Server.PrintToChatAll(InsideAdvertText()), TimerFlags.REPEAT);
             if (!InsideEnabled)
                 return;
             InsideLoadPending();
@@ -150,7 +155,15 @@ namespace Deathmatch
 
         public void InsideOnConnect(CCSPlayerController p)
         {
-            if (!InsideEnabled || !InsideIsHuman(p))
+            if (!InsideIsHuman(p))
+                return;
+            if (Config.InsideRanks.AdvertEnabled)
+            {
+                // Welcome with the advert once the player sees the chat.
+                var id = p.SteamID.ToString();
+                AddTimer(15f, () => InsideOnlinePlayer(id)?.PrintToChat(InsideAdvertText()));
+            }
+            if (!InsideEnabled)
                 return;
             insideActivity[p.Slot] = new InsideActivity { LastActive = Server.CurrentTime };
             var steamId = p.SteamID.ToString();
@@ -332,6 +345,7 @@ namespace Deathmatch
                 p.PrintToChat(Localizer["Chat.Prefix"] + " " + Localizer["Chat.Inside.Rank", st.RankName, st.XP, r.Position?.ToString() ?? "-"]);
                 if (!string.IsNullOrEmpty(st.NextRankName))
                     p.PrintToChat(Localizer["Chat.Prefix"] + " " + Localizer["Chat.Inside.NextRank", st.NextRankName, Math.Max(0, st.NextXP - st.XP)]);
+                p.PrintToChat(InsideAdvertText());
             });
         }
 

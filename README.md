@@ -43,7 +43,7 @@ Designed for <a href="https://github.com/roflmuffin/CounterStrikeSharp">CounterS
 <details>
 <summary><h2>OCB Inside ranks</h2></summary>
 
-The plugin can report raw stats to [OCB Inside](https://ocb.gg), which turns them into XP, ranks and achievements (warmup-server style ranks). The plugin itself computes nothing: every `Flush Seconds` it sends what it counted per player and shows the rank Inside answers with.
+The plugin can report raw stats to [OCB Inside](https://ocb.gg), which turns them into XP, ranks and achievements (warmup-server style ranks). The rank is shared with our retakes servers ([cs2-retakes](https://github.com/OthersCantBeat/cs2-retakes)). The plugin itself computes nothing: every `Flush Seconds` it sends what it counted per player and shows the rank Inside answers with.
 
 **Counted per player** (humans only): kills, deaths (by another player), headshots, knife kills, assists, damage, hits, best kill streak, the streak count at each kill, and **active seconds** - a second only counts while the player is alive and moved or dealt damage within the last `AFK Seconds`. Campers and AFK players earn no time.
 
@@ -60,6 +60,8 @@ The plugin can report raw stats to [OCB Inside](https://ocb.gg), which turns the
 | `Announce Rank Up` | `true` | chat message on rank-ups and achievements |
 | `Rank Commands` / `Top Commands` | `css_rank,css_dmrank` / `css_top,css_dmtop` | `!rank`, `!top` in chat |
 | `Max Pending Batches` | `50` | batches kept while Inside is unreachable |
+| `Advert Enabled` / `Advert Interval Seconds` | `true` / `300` | chat advert (every 5 min and 15 s after joining) where players see their stats; works without `Enabled` |
+| `Advert Stats Url` / `Advert Apply Url` | `inside.ocb.gg` / `ocb.gg` | |
 
 If Inside can't be reached, batches are kept in memory (and in `inside-pending.json` on unload) and sent later; Inside ignores a batch it already has, so nothing counts twice. XP formula, ranks and achievements are configured in Inside, see its docs (`entwicklung/cs2-deathmatch`).
 </details>
