@@ -16,6 +16,7 @@ public class DeathmatchConfig : BasePluginConfig
     [JsonPropertyName("Custom Commands")] public CustomCommands CustomCommands { get; set; } = new CustomCommands();
     [JsonPropertyName("Players Gameplay Settings")] public PlayersSettings PlayersSettings { get; set; } = new PlayersSettings();
     [JsonPropertyName("Client Preferences")] public PlayersPreferences PlayersPreferences { get; set; } = new PlayersPreferences();
+    [JsonPropertyName("Inside Ranks")] public InsideRanks InsideRanks { get; set; } = new InsideRanks();
     [JsonPropertyName("Custom Modes")]
     public Dictionary<string, ModeData> CustomModes { get; set; } = new()
     {
@@ -398,3 +399,25 @@ public class WeaponsRestrict
         }
     };
 }
+
+// Ranks from OCB Inside: the plugin only counts raw values (kills, damage,
+// active time, streaks) and sends them in batches; Inside computes XP, ranks
+// and achievements and answers with the rank shown as clan tag.
+public class InsideRanks
+{
+    [JsonPropertyName("Enabled")] public bool Enabled { get; set; } = false;
+    // Base URL of the game server API, e.g. https://gs.ocb.gg (requests go to {Url}/cs2/...).
+    [JsonPropertyName("Url")] public string Url { get; set; } = "https://gs.ocb.gg";
+    // Key of this server from Inside (CS2-Deathmatch -> Verwaltung -> Server), starts with "ocbdm_".
+    [JsonPropertyName("Server Key")] public string ServerKey { get; set; } = "";
+    [JsonPropertyName("Flush Seconds")] public int FlushSeconds { get; set; } = 60;
+    // Without movement or damage for this long a player counts as AFK: no active time.
+    [JsonPropertyName("AFK Seconds")] public int AfkSeconds { get; set; } = 20;
+    [JsonPropertyName("Show Clan Tag")] public bool ShowClanTag { get; set; } = true;
+    [JsonPropertyName("Announce Rank Up")] public bool AnnounceRankUp { get; set; } = true;
+    [JsonPropertyName("Rank Commands")] public string RankCommands { get; set; } = "css_rank,css_dmrank";
+    [JsonPropertyName("Top Commands")] public string TopCommands { get; set; } = "css_top,css_dmtop";
+    // Batches kept while Inside can't be reached; older ones are dropped.
+    [JsonPropertyName("Max Pending Batches")] public int MaxPendingBatches { get; set; } = 50;
+}
+

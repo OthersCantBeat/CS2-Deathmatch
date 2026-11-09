@@ -34,11 +34,35 @@ Designed for <a href="https://github.com/roflmuffin/CounterStrikeSharp">CounterS
 
 
 ### Installation
-1. Download the latest verison - https://github.com/NockyCZ/CS2-Deathmatch/releases
+1. Download the latest version - https://github.com/OthersCantBeat/CS2-Deathmatch/releases/latest/download/Deathmatch.zip (built by `.github/workflows/release.yml` on every `v*` tag)
 2. Unzip into your servers `csgo/addons/counterstrikesharp/` dir
 3. Restart the server
 4. Configure the config files and custom modes
 <h1></h1>
+
+<details>
+<summary><h2>OCB Inside ranks</h2></summary>
+
+The plugin can report raw stats to [OCB Inside](https://ocb.gg), which turns them into XP, ranks and achievements (warmup-server style ranks). The plugin itself computes nothing: every `Flush Seconds` it sends what it counted per player and shows the rank Inside answers with.
+
+**Counted per player** (humans only): kills, deaths (by another player), headshots, knife kills, assists, damage, hits, best kill streak, the streak count at each kill, and **active seconds** - a second only counts while the player is alive and moved or dealt damage within the last `AFK Seconds`. Campers and AFK players earn no time.
+
+**Config** (`Inside Ranks` in `Deathmatch.json`):
+
+| Key | Default | |
+|---|---|---|
+| `Enabled` | `false` | |
+| `Url` | `https://gs.ocb.gg` | requests go to `{Url}/cs2/stats`, `/cs2/rank`, `/cs2/top` |
+| `Server Key` | `""` | key of this server, created in Inside under *CS2-Deathmatch → Verwaltung → Server* (`ocbdm_…`) |
+| `Flush Seconds` | `60` | min. 15 |
+| `AFK Seconds` | `20` | |
+| `Show Clan Tag` | `true` | rank as clan tag in the scoreboard, e.g. `[Deagle-Diplom]` |
+| `Announce Rank Up` | `true` | chat message on rank-ups and achievements |
+| `Rank Commands` / `Top Commands` | `css_rank,css_dmrank` / `css_top,css_dmtop` | `!rank`, `!top` in chat |
+| `Max Pending Batches` | `50` | batches kept while Inside is unreachable |
+
+If Inside can't be reached, batches are kept in memory (and in `inside-pending.json` on unload) and sent later; Inside ignores a batch it already has, so nothing counts twice. XP formula, ranks and achievements are configured in Inside, see its docs (`entwicklung/cs2-deathmatch`).
+</details>
 
 <details>
 <summary><h2>Sounds</h2></summary>

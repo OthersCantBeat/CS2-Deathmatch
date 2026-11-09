@@ -1,0 +1,52 @@
+name: release
+
+# Builds the plugin on our self-hosted runner (runner group "public", the repo
+# is public) and publishes Deathmatch.zip as a GitHub release. Only pushing a
+# tag or a manual run starts it - never a pull request, so code from forks
+# never runs on our machine.
+#
+# Server install: unpack into csgo/ (the zip contains addons/counterstrikesharp/...).
+# Latest version: https://github.com/OthersCantBeat/CS2-Deathmatch/releases/latest/download/Deathmatch.zip
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag, e.g. v1.4.1 (created on the selected branch)'
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        # .NET SDK in a container, so the runner needs nothing but Docker.
+        run: |
+          docker run --rm -v "$PWD":/src -w /src/source/Deathmatch mcr.microsoft.com/dotnet/sdk:10.0 \
+            sh -c "dotnet publish -c Release && chown -R $(id -u):$(id -g) /src/source"
+          test -f source/Deathmatch/bin/Deathmatch.zip
+          unzip -l source/Deathmatch/bin/Deathmatch.zip
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+        run: |
+          cp source/Deathmatch/bin/Deathmatch.zip "Deathmatch.zip"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" Deathmatch.zip --clobber
+          else
+            gh release create "$TAG" Deathmatch.zip --target "$GITHUB_SHA" --title "$TAG" --generate-notes --latest
+          fi

@@ -36,6 +36,8 @@ namespace Deathmatch
 					SetupDefaultPreferences(data, IsVIP);
 				}
 			}
+			if (player != null && player.IsValid)
+				InsideOnConnect(player);
 			return HookResult.Continue;
 		}
 
@@ -61,6 +63,7 @@ namespace Deathmatch
 				blockedSpawns.Remove(player.Slot);
 				playersWaitingForRespawn.Remove(player.Slot);
 				playersWithSpawnProtection.Remove(player.Slot);
+				InsideOnDisconnect(player);
 			}
 
 			return HookResult.Continue;
@@ -80,6 +83,7 @@ namespace Deathmatch
 					PerformRespawn(player, player.Team);
 
 				GivePlayerWeapons(player, false);
+				InsideOnSpawn(player);
 			}
 
 			return HookResult.Continue;
@@ -216,6 +220,9 @@ namespace Deathmatch
 				if (Config.Gameplay.DisplayAllKillFeed)
 					@event.FireEventToClient(attacker);
 			}
+			var insideStreak = attacker != null && attacker.IsValid && playerData.TryGetValue(attacker.Slot, out var insideData) ? insideData.KillStreak : 0;
+			InsideOnDeath(player, attacker, @event.Assister, @event.Headshot,
+				@event.Weapon.Contains("knife") || @event.Weapon.Contains("bayonet"), insideStreak);
 			return HookResult.Continue;
 		}
 
@@ -227,6 +234,8 @@ namespace Deathmatch
 
 			if (player == null || !player.IsValid || attacker == player)
 				return HookResult.Continue;
+
+			InsideOnHurt(player, attacker, @event.DmgHealth);
 
 			if (attacker != null && attacker.IsValid && playerData.TryGetValue(attacker.Slot, out var attackerData))
 			{

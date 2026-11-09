@@ -25,7 +25,7 @@ public partial class Deathmatch : BasePlugin, IPluginConfig<DeathmatchConfig>
 {
     public override string ModuleName => "Deathmatch";
     public override string ModuleAuthor => "Nocky & Miksen(Forked)";
-    public override string ModuleVersion => "1.3.6";
+    public override string ModuleVersion => "1.4.0";
 
     public void OnConfigParsed(DeathmatchConfig config)
     {
@@ -175,7 +175,7 @@ public partial class Deathmatch : BasePlugin, IPluginConfig<DeathmatchConfig>
             RegisterTrackedCommandListener(cmd, OnMapChangeCommand);
 
         bool mapLoaded = false;
-        _onMapEndDelegate = () => { mapLoaded = false; StopNewModeSound(); };
+        _onMapEndDelegate = () => { mapLoaded = false; StopNewModeSound(); InsideFlush(); };
         RegisterListener<OnMapEnd>(_onMapEndDelegate);
         _onMapStartDelegate = mapName =>
         {
@@ -345,6 +345,7 @@ public partial class Deathmatch : BasePlugin, IPluginConfig<DeathmatchConfig>
         RegisterListener<OnMapStart>(_onMapStartDelegate);
         _onTickDelegate = OnTickHudFast;
         RegisterListener<OnTick>(_onTickDelegate);
+        InsideLoad();
 
         if (Config.General.RemoveDecals)
         {
@@ -427,6 +428,7 @@ public partial class Deathmatch : BasePlugin, IPluginConfig<DeathmatchConfig>
 
     public override void Unload(bool hotReload)
     {
+        InsideUnload();
         VirtualFunctions.CCSPlayer_ItemServices_CanAcquireFunc.Unhook(OnWeaponCanAcquire, HookMode.Pre);
         //VirtualFunctions.CBaseEntity_TakeDamageOldFunc.Unhook(OnTakeDamage, HookMode.Pre);
         RemoveListener<OnEntityTakeDamagePre>(OnEntityTakeDamagePre);
